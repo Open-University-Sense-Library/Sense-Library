@@ -98,11 +98,13 @@ def readSensor(sensor_id):
     SER.write(COMMAND_HEADER + byte_1 + byte_2)
     reply=binascii.hexlify(SER.read(size=4))
     string_reply = str(reply, 'ascii')
-    return int(string_reply[5:], 16)
+    if sensor_id == 3:
+        if int(string_reply[5:], 16) == 1023:
+            return False
+        else:
+            return True
+    else:
+        return int(string_reply[5:], 16)
+        
     
 
-openSerialPort(4)
-while 1:
-    print(readSensor(0))
-    time.sleep(0.01)
-    
