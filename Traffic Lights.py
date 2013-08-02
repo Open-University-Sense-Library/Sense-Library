@@ -1,6 +1,4 @@
 import sense
-import pyserial
-import binascii
 import time
 
 sense.openSerialPort(4)

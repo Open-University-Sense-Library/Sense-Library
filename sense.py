@@ -38,7 +38,7 @@ def ledOn(led_id):
 
 def ledOff(led_id):
     byte_1 = b'\xC0'
-    byte_2 = bytes(c_unit8(2**(led_id-1)))
+    byte_2 = bytes(c_uint8(2**(led_id-1)))
     SER.write(COMMAND_HEADER + byte_1 + byte_2)
     reply=binascii.hexlify(SER.read(size=3))
     led = 0
@@ -55,7 +55,7 @@ def stepperMove(motor_id, steps):
 
 def servoSetPosition(servo_id, angle):
     byte_1 = bytes(c_uint8(208+ servo))
-    byte_2 = bytes(c_unit8(angle))
+    byte_2 = bytes(c_uint8(angle))
     SER.write(COMMAND_HEADER + byte_1 + byte_2)
     reply=binascii.hexlify(SER.read(size=3))
     return str(reply,'ascii')
