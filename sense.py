@@ -77,3 +77,32 @@ def dcOff(motor_id):
     return str(reply,'ascii')
     
 
+def readSensor(sensor_id):
+    '''
+    Sensor 0 = Slider 000 - 3ff
+    Sensor 1 = IR detector 3ff (not detected), 000 detected 
+    Sensor 2 = MIC quiet 000 - 3ff loud
+    Sensor 3 = Button 3ff (not pressed) 000 (pressed)
+    Sensor 4 = A
+    Sensor 5 = B
+    Sensor 6 = C
+    Sensor 7 - 15 =Nothing
+    element         01 23 45 67
+    Response code = HH HH IR RR
+    H = header
+    I = sensor id number
+    R = response value
+    '''
+    byte_1 = bytes(c_uint8(32 + sensor_id))
+    byte_2 = b'\x00'
+    SER.write(COMMAND_HEADER + byte_1 + byte_2)
+    reply=binascii.hexlify(SER.read(size=4))
+    string_reply = str(reply, 'ascii')
+    return int(string_reply[5:], 16)
+    
+
+openSerialPort(4)
+while 1:
+    print(readSensor(0))
+    time.sleep(0.01)
+    
