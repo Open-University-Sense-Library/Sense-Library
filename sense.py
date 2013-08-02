@@ -36,21 +36,25 @@ def ledOn(led_id):
     return str(reply,'ascii')
     
 
-def ledMultiOn(led_id_1, led_id_2, led_id_3, led_id_4, led_id_5, led_id_6, led_id_7):
+def ledMultiOn(led_id_array[]):
+    led_id_total = 0
     byte_1 = b'\xC1'
-    byte_2 = bytes(c_uint8((led_id_1*(2**0)) + (led_id_2*(2**1)) + (led_id_3*(2**2)) + (led_id_4*(2**3)) + (led_id_5*(2**4)) + (led_id_6*(2**5)) + (led_id_7*(2**6)) ))
+    for i in range (0, len(led_id_array)):
+        led_id_total+=(2**led_id_array[i])
+    byte_2 = bytes(c_uint8(led_id_total))
     ser.write(command_header + byte_1 + byte_2)
     reply = binascii.hexlify(ser.read(size=3))
-    led_id_1, led_id_2, led_id_3, led_id_4, led_id_5, led_id_6, led_id_7 = 0, 0, 0, 0, 0, 0, 0
     return str(reply,'ascii')
     
 
-def ledMultiOff(led_id_1, led_id_2, led_id_3, led_id_4, led_id_5, led_id_6, led_id_7):
+def ledMultiOff(led_id_array[]):
+    led_id_total = 0
     byte_1 = b'\xC0'
-    byte_2 = bytes(c_uint8((led_id_1*(2**0)) + (led_id_2*(2**1)) + (led_id_3*(2**2)) + (led_id_4*(2**3)) + (led_id_5*(2**4)) + (led_id_6*(2**5)) + (led_id_7*(2**6)) ))
+    for i in range (0, len(led_id_array)):
+        led_id_total+=(2**led_id_array[i])
+    byte_2 = bytes(c_uint8(led_id_total))
     ser.write(command_header + byte_1 + byte_2)
     reply = binascii.hexlify(ser.read(size=3))
-    led_id_1, led_id_2, led_id_3, led_id_4, led_id_5, led_id_6, led_id_7 = 0, 0, 0, 0, 0, 0, 0
     return str(reply,'ascii')
     
 
@@ -126,25 +130,29 @@ def readSensor(sensor_id):
         
     
 
-def burstModeSet0to7(sensor_id_0, sensor_id_1, sensor_id_2, sensor_id_3, sensor_id_4, sensor_id_5, sensor_id_6, sensor_id_7):
+def burstModeSet(sensor_id_array[]):
+    sensor_id_total_0_to_7 = 0
+    sensor_id_total_8_to_15 = 0
+    for i in range(0, len(sensor_id_array))
+        if sensor_id_array[i] <=7:
+            sensor_id_total_0_to_7 += 2**sensor_id_array[i]
+
+        if sensor_id_array[i] >7:
+            sensor_id_total_8_to_15 += 2**sensor_id_array[i]
+
+
     byte_1 = b'\xA0'
-    byte_2 = bytes(c_uint8((sensor_id_0*(2**0)) + (sensor_id_1*(2**1)) + (sensor_id_2*(2**2)) + (sensor_id_3*(2**3)) + (sensor_id_4*(2**4)) + (sensor_id_5*(2**5)) + (sensor_id_6*(2**6)) + (sensor_id_7*(2**7)) ))
-    #print (   binascii.hexlify(  command_header + byte_1 + byte_2  )  )
+    byte_2 = bytes(c_uint8(sensor_id_toal_0_to_7))
     ser.write(command_header + byte_1 + byte_2)
-    reply = binascii.hexlify(ser.read(size=3))
-    sensor_id_0, sensor_id_1, sensor_id_2, sensor_id_3, sensor_id_4, sensor_id_5, sensor_id_6, sensor_id_7 = 0, 0, 0, 0, 0, 0, 0, 0
-    return str(reply,'ascii')
-    
-
-def burstModeSet8to15(sensor_id_8, sensor_id_9, sensor_id_10, sensor_id_11, sensor_id_12, sensor_id_13, sensor_id_14, sensor_id_15):
+    reply_1 = binascii.hexlify(ser.read(size=3))
     byte_1 = b'\xA1'
-    byte_2 = bytes(c_uint8((sensor_id_8*(2**0)) + (sensor_id_9*(2**1)) + (sensor_id_10*(2**2)) + (sensor_id_11*(2**3)) + (sensor_id_12*(2**4)) + (sensor_id_13*(2**5)) + (sensor_id_14*(2**6)) + (sensor_id_15*(2**7)) ))
-    #print (   binascii.hexlify(  command_header + byte_1 + byte_2  )  )
+    byte_2 = bytes(c_uint8(sensor_id_toal_8_to_15))
     ser.write(command_header + byte_1 + byte_2)
-    reply = binascii.hexlify(ser.read(size=3))
-    sensor_id_8, sensor_id_9, sensor_id_10, sensor_id_11, sensor_id_12, sensor_id_13, sensor_id_14, sensor_id_15 = 0, 0, 0, 0, 0, 0, 0, 0
-    return str(reply,'ascii')
-
+    reply_2 = binascii.hexlify(ser.read(size=3))
+    if reply_1 == reply_2:
+        return str(reply_1,'ascii')
+        
+    
 
 def burstModeOffAll():
     byte_1 = b'\xA0'
