@@ -3,28 +3,19 @@ import time
 
 sense.openSerialPort(4)
 while 1:
-    sense.ledOn(1)
-    sense.ledOn(2)
+    sense.ledMultiOn([1,2])
     time.sleep(10)
-    
-    sense.ledOff(1)
-    sense.ledOff(2)
-    sense.ledOn(3)
-    sense.ledOn(4)
+
+    sense.ledMultiOff([1,2])
+    sense.ledMultiOn([3,4])
     time.sleep(3)
     
-    sense.ledOff(3)
-    sense.ledOff(4)
-    sense.ledOn(5)
-    sense.ledOn(6)
+    sense.ledMultiOff([3,4])
+    sense.ledMultiOn([5,6])
     time.sleep(6)
     
-    sense.ledOn(3)
-    sense.ledOn(4)
+    sense.ledMultiOn([3,4])
     time.sleep(2)
     
-    sense.ledOff(6)
-    sense.ledOff(5)
-    sense.ledOff(4)
-    sense.ledOff(3)
+    sense.ledMultiOff([3,4,5,6])
 

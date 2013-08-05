@@ -3,11 +3,18 @@ import time
 
 sense.openSerialPort(4)
 
-sense.burstModeSet8to15(1,1,1,0,0,0,0,0)
+sense.burstModeSet([0,3])
 x=0
 while x <10000000:
-    print(str(sense.binascii.hexlify(sense.ser.read(size=6)), 'ascii'))
-    #time.sleep(0.1)
+    print(sense.readBursts())
+    if sense.readBursts()[9:] == '000' and  int(sense.readBursts()[3:6],16) <= 512:
+        sense.stepperMove(0,1)
+        time.sleep(0.05)
+
+    elif sense.readBursts()[9:] == '000' and  int(sense.readBursts()[3:6],16) > 512:
+        sense.stepperMove(0,-1)
+        time.sleep(0.05)
+        
     x +=1
 
 

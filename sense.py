@@ -36,22 +36,22 @@ def ledOn(led_id):
     return str(reply,'ascii')
     
 
-def ledMultiOn(led_id_array[]):
+def ledMultiOn(led_id_array):
     led_id_total = 0
     byte_1 = b'\xC1'
-    for i in range (0, len(led_id_array)):
-        led_id_total+=(2**led_id_array[i])
+    for i in led_id_array:
+        led_id_total+=(2**(i-1))
     byte_2 = bytes(c_uint8(led_id_total))
     ser.write(command_header + byte_1 + byte_2)
     reply = binascii.hexlify(ser.read(size=3))
     return str(reply,'ascii')
     
 
-def ledMultiOff(led_id_array[]):
+def ledMultiOff(led_id_array):
     led_id_total = 0
     byte_1 = b'\xC0'
-    for i in range (0, len(led_id_array)):
-        led_id_total+=(2**led_id_array[i])
+    for i in led_id_array:
+        led_id_total+=(2**(i-1))
     byte_2 = bytes(c_uint8(led_id_total))
     ser.write(command_header + byte_1 + byte_2)
     reply = binascii.hexlify(ser.read(size=3))
@@ -130,25 +130,27 @@ def readSensor(sensor_id):
         
     
 
-def burstModeSet(sensor_id_array[]):
+def burstModeSet(sensor_id_array):
     sensor_id_total_0_to_7 = 0
     sensor_id_total_8_to_15 = 0
-    for i in range(0, len(sensor_id_array))
-        if sensor_id_array[i] <=7:
-            sensor_id_total_0_to_7 += 2**sensor_id_array[i]
+    for i in sensor_id_array:
+        if i <= 7:
+            sensor_id_total_0_to_7 += 2**i
 
-        if sensor_id_array[i] >7:
-            sensor_id_total_8_to_15 += 2**sensor_id_array[i]
+        if i >7:
+            sensor_id_total_8_to_15 += 2**i
 
 
     byte_1 = b'\xA0'
-    byte_2 = bytes(c_uint8(sensor_id_toal_0_to_7))
+    byte_2 = bytes(c_uint8(sensor_id_total_0_to_7))
     ser.write(command_header + byte_1 + byte_2)
     reply_1 = binascii.hexlify(ser.read(size=3))
     byte_1 = b'\xA1'
-    byte_2 = bytes(c_uint8(sensor_id_toal_8_to_15))
+    byte_2 = bytes(c_uint8(sensor_id_total_8_to_15))
     ser.write(command_header + byte_1 + byte_2)
     reply_2 = binascii.hexlify(ser.read(size=3))
+    global burst_length
+    burst_length = len(sensor_id_array)
     if reply_1 == reply_2:
         return str(reply_1,'ascii')
         
@@ -167,4 +169,6 @@ def burstModeOffAll():
         
     
 
-    
+def readBursts():
+    burst_response = str(binascii.hexlify(ser.read(size=3*burst_length)), 'ascii')
+    return burst_response
