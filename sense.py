@@ -1,6 +1,36 @@
 import serial, time, binascii
 from ctypes import c_uint8
 
+def scan():
+    available = []
+    for i in range(256):
+        try:
+            s = serial.Serial(i)
+            available.append( [i, s.portstr] )
+            s.close()
+        except serial.SerialException:
+            pass
+
+    return available
+
+def senseFind():
+    global ser
+    global command_header
+    command_header = b'\x54\xFE'
+    for com in scan():
+        ser = serial.Serial(int(com[0]), 115200, timeout=1)
+        time.sleep(2)
+        if pingSenseBoard() == '55ffaa0460':
+            print ("Opening Serial port...")
+            time.sleep(2)
+            print ("Connected to sense at port: " + ser.name)
+            break
+        else:
+            ser.close()
+            
+
+
+
 def openSerialPort(port_num):
     print ("Opening Serial port...")
     global ser
@@ -15,8 +45,8 @@ def pingSenseBoard():
     byte_1 = b'\x00'
     byte_2 = b'\x00'
     ser.write(command_header + byte_1 + byte_2)
-    reply = binascii.hexlify(ser.read(size=5))
-    return str(reply,'ascii')
+    reply = str(binascii.hexlify(ser.read(size=5)),'ascii')
+    return reply
     
 
 def resetSenseBoard():

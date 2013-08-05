@@ -1,7 +1,9 @@
 import sense
 import time
 
-sense.openSerialPort(4)
+sense.senseFind()
+
+#sense.openSerialPort(4)
 
 sense.burstModeSet([0,3])
 x=0
