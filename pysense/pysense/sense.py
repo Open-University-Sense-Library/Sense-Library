@@ -1,7 +1,7 @@
-import serial, time, binascii, os
+import serial, time, binascii
 from ctypes import c_uint8
 
-def scanWindows():
+def scan():
     available = []
     for i in range(256):
         try:
@@ -13,39 +13,23 @@ def scanWindows():
 
     return available
 
-def scanPosix():
-    """scan for available ports. return a list of device names."""
-    return glob.glob('/dev/ttyS*') + glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*')
-
 def senseFind():
     global ser
     global command_header
     command_header = b'\x54\xFE'
-    if os.name == 'nt':
-        for com in scanWindows():
-            ser = serial.Serial(int(com[0]), 115200, timeout=1)
+    for com in scan():
+        ser = serial.Serial(int(com[0]), 115200, timeout=1)
+        time.sleep(2)
+        if pingSenseBoard() == '55ffaa0460':
+            print ("Opening Serial port...")
             time.sleep(2)
-            if pingSenseBoard() == '55ffaa0460':
-                print ("Opening Serial port...")
-                time.sleep(2)
-                print ("Connected to sense at port: " + ser.name)
-                break
-            else:
-                ser.close()
-                
+            print ("Connected to sense at port: " + ser.name)
+            break
+        else:
+            ser.close()
             
-    '''    
-    elif os.name == 'posix':
-        for com in scanPosix():
-            ser = serial.Serial(, 115200, timeout=1)
-            time.sleep(2)
-            if pingSenseBoard() == '55ffaa0460':
-                print ("Opening Serial port...")
-                time.sleep(2)
-                print ("Connected to sense at port: " + ser.name)
-                break
-            else:
-                ser.close()'''
+
+
 
 def openSerialPort(port_num):
     print ("Opening Serial port...")

@@ -1,7 +1,8 @@
 import sense
 import time
 
-sense.openSerialPort(4)
+sense.senseFind()
+
 while 1:
     sense.ledMultiOn([1,2])
     time.sleep(10)
@@ -18,4 +19,3 @@ while 1:
     time.sleep(2)
     
     sense.ledMultiOff([3,4,5,6])
-
