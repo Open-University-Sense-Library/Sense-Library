@@ -216,4 +216,11 @@ def burstModeOffAll():
 
 def readBursts():
     burst_response = str(binascii.hexlify(ser.read(size=3*burst_length)), 'ascii')
+    '''
+    burst_response_list
+    for i in range(3,6*burst_length,5):
+        burst_response_list.append(burst_response[i:i+3])
+        
+    return burst_response_list
+    '''
     return burst_response
