@@ -43,8 +43,10 @@ def senseFind():
                 ser.close()
                 
             
-    '''    
+    
     elif os.name == 'posix':
+        print("Sorry not compatible at this time!")
+        '''
         for com in scanPosix():
             ser = serial.Serial(, 115200, timeout=1)
             time.sleep(2)
@@ -54,7 +56,11 @@ def senseFind():
                 print ("Connected to sense at port: " + ser.name)
                 break
             else:
-                ser.close()'''
+                ser.close()
+
+            
+        '''
+        
 
 def openSerialPort(port_num):
     print ("Opening Serial port...")
