@@ -15,6 +15,7 @@ for name in scan():
 for i in range(0,32):
     try:
         sense.openSerialPort('/dev/ttyS'+str(i))
+        time.sleep(2)
         print('worked!!!')
         serial.close()
 
