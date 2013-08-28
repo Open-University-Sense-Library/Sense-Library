@@ -14,12 +14,40 @@ sense7.ledOn(7)
 #sense8.ledMultiOn([1,2,3,4,5,6,7])
 is_playing = False
 
+
+
+root = int(input("please give the frequency of the root:   "))
+diminished_second = int (root*((2**(1/12))**0))
+minor_second = int (root*((2**(1/12))**1))
+major_second = int (root*((2**(1/12))**2))
+diminished_third = int (root*((2**(1/12))**2))
+augmented_second = int (root*((2**(1/12))**3))
+minor_third = int (root*((2**(1/12))**3))
+major_third = int (root*((2**(1/12))**4))
+diminished_fourth = int (root*((2**(1/12))**4))
+augmented_third = int (root*((2**(1/12))**5))
+perfect_fourth = int (root*((2**(1/12))**5))
+diminished_fifth = int (root*((2**(1/12))**6))
+augmented_fourth = int (root*((2**(1/12))**6))
+perfect_fifth = int (root*((2**(1/12))**7))
+diminished_sixth = int (root*((2**(1/12))**7))
+augmented_fifth = int (root*((2**(1/12))**8))
+minor_sixth = int (root*((2**(1/12))**9))
+diminished_seventh = int (root*((2**(1/12))**9))
+major_sixth = int (root*((2**(1/12))**10))
+augmented_sixth = int (root*((2**(1/12))**10))
+minor_seventh = int (root*((2**(1/12))**10))
+major_seventh = int (root*((2**(1/12))**11))
+diminished_octave = int (root*((2**(1/12))**11))
+augmented_seventh = int (root*((2**(1/12))**12))
+octave = int (root*((2**(1/12))**12))
+
 def playTone(freq):
-    winsound.Beep(freq,1000)
+    winsound.Beep(freq,500)
 
 def detectBeamBreak1(note_freq):
     while 1:
-        while sense1.readSensor(INFRARED) == 1023:
+        if sense1.readSensor(INFRARED) == 1023:
             playTone(note_freq)
             is_playing = True
 
@@ -71,13 +99,13 @@ def detectBeamBreak8(note_freq):
             playTone(note_freq)
 
 '''        
-_thread.start_new_thread(detectBeamBreak1, (262,))
-_thread.start_new_thread(detectBeamBreak2, (294,))
-_thread.start_new_thread(detectBeamBreak3, (330,))
-_thread.start_new_thread(detectBeamBreak4, (349,))
-_thread.start_new_thread(detectBeamBreak5, (392,))
-_thread.start_new_thread(detectBeamBreak6, (440,))
-_thread.start_new_thread(detectBeamBreak7, (494,))
+_thread.start_new_thread(detectBeamBreak1, (root,))
+_thread.start_new_thread(detectBeamBreak2, (major_second,))
+_thread.start_new_thread(detectBeamBreak3, (major_third,))
+_thread.start_new_thread(detectBeamBreak4, (perfect_fourth,))
+_thread.start_new_thread(detectBeamBreak5, (perfect_fifth,))
+_thread.start_new_thread(detectBeamBreak6, (major_sixth,))
+_thread.start_new_thread(detectBeamBreak7, (major_seventh,))
 #_thread.start_new_thread(detectBeamBreakNone, ())
 #_thread.start_new_thread(detectBeamBreak8, (523,))
 
