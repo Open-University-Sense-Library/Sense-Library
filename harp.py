@@ -1,5 +1,5 @@
 from pysense100 import *
-import time, winsound, _thread
+import time, pygame.mixer, _thread
 
 
 sense1, sense2, sense3, sense4, sense5, sense6, sense7 = PySense(), PySense(), PySense(), PySense(), PySense(), PySense(), PySense()
