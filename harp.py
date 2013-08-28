@@ -111,4 +111,3 @@ _thread.start_new_thread(detectBeamBreak7, (major_seventh,))
 
 while 1:
     pass
-
