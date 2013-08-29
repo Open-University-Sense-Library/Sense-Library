@@ -23,6 +23,14 @@ G2 = pygame.mixer.Sound('G2.wav')
 Gs2 = pygame.mixer.Sound('G#2.wav')
 A2 = pygame.mixer.Sound('A2.wav')
 As2 = pygame.mixer.Sound('A#2.wav')
+B2 = pygame.mixer.Sound('B2.wav')
+C3 = pygame.mixer.Sound('C3.wav')
+Cs3 = pygame.mixer.Sound('C#3.wav')
+D3 = pygame.mixer.Sound('D3.wav')
+Ds3 = pygame.mixer.Sound('D#3.wav')
+E3 = pygame.mixer.Sound('E3.wav')
+F3 = pygame.mixer.Sound('F3.wav')
+Fs3 = pygame.mixer.Sound('F#3.wav')
 
 def isButtonPressed():
     pass
@@ -78,7 +86,7 @@ def detectBeamBreak6(note):
 def detectBeamBreak7(note):
     while 1:
         if sense7.readSensor(INFRARED) == 1023:
-            As2.play()
+            note.play()
             while sense7.readSensor(INFRARED) == 1023:
                 pass
         note.stop()
@@ -96,13 +104,13 @@ def detectBeamBreak8(note_freq):
 
 '''        
 _thread.start_new_thread(detectBeamBreak1, (E2,))
-_thread.start_new_thread(detectBeamBreak2, (F2,))
-_thread.start_new_thread(detectBeamBreak3, (Fs2,))
-_thread.start_new_thread(detectBeamBreak4, (G2,))
-_thread.start_new_thread(detectBeamBreak5, (Gs2,))
-_thread.start_new_thread(detectBeamBreak6, (A2,))
-_thread.start_new_thread(detectBeamBreak7, (As2,))
-#_thread.start_new_thread(detectBeamBreak8, (B2,))
+_thread.start_new_thread(detectBeamBreak2, (Fs2,))
+_thread.start_new_thread(detectBeamBreak3, (Gs2,))
+_thread.start_new_thread(detectBeamBreak4, (A2,))
+_thread.start_new_thread(detectBeamBreak5, (B2,))
+_thread.start_new_thread(detectBeamBreak6, (Cs3,))
+_thread.start_new_thread(detectBeamBreak7, (Ds3,))
+#_thread.start_new_thread(detectBeamBreak8, (E3,))
 
 while 1:
     pass
