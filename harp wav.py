@@ -1,4 +1,4 @@
-from pysense100 import *
+from pysense import *
 import time, pygame.mixer, _thread
 
 
