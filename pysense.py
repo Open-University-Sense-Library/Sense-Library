@@ -18,6 +18,8 @@ ANTICLOCKWISE = 1
 #header
 COMMAND_HEADER = b'\x54\xFE'
 
+PORTLIST = []
+
 #class for contolling 1 senseboard
 class PySense(object):
     
@@ -37,8 +39,13 @@ class PySense(object):
         return available
         
     def scanPosix(self):
-        """scan for available ports. return a list of device names."""
-        return glob.glob('/dev/ttyS*') + glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*')
+        '''scan for available ports. return a list of device names.'''
+        global PORTLIST
+        if len(PORTLIST) == 0:
+            PORTLIST =  glob.glob('/dev/ttyS*') + glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*')
+        
+        print (PORTLIST)
+        return PORTLIST
 
     def resetSenseBoard(self):
         global COMMAND_HEADER
@@ -46,10 +53,8 @@ class PySense(object):
         byte_2 = b'\x00'
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
+        
 
     def pingSenseBoard(self):
         global COMMAND_HEADER
@@ -57,22 +62,18 @@ class PySense(object):
         byte_2 = b'\x00'
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=5))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
     
     def ledOn(self, led_id):
         global COMMAND_HEADER
         byte_1 = b'\xC1'
         byte_2 = bytes(c_uint8(2**(led_id-1)))
+        sending = binascii.hexlify(byte_1 + byte_2)
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
         led_id = 0
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
+
         
     def ledOff(self, led_id):
         global COMMAND_HEADER
@@ -81,10 +82,7 @@ class PySense(object):
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
         led_id = 0
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
     
     def ledMultiOn(self, led_id_array):
         global COMMAND_HEADER
@@ -95,11 +93,8 @@ class PySense(object):
         byte_2 = bytes(c_uint8(led_id_total))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
-
+        return str(reply, 'ascii')
+    
     def ledMultiOff(self, led_id_array):
         global COMMAND_HEADER
         led_id_total = 0
@@ -109,10 +104,7 @@ class PySense(object):
         byte_2 = bytes(c_uint8(led_id_total))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
     
     def scaleLEDs(self, minvalue, maxvalue, value, ledno):
         AMOUNT = round(((value-minvalue)/(maxvalue-minvalue)) * ledno)
@@ -135,22 +127,15 @@ class PySense(object):
         byte_2 = bytes(c_uint8(steps))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
-        
-
+        return str(reply, 'ascii')
+    
     def servoSetPosition(self, servo_id, angle):
         global COMMAND_HEADER
         byte_1 = bytes(c_uint8(208+ servo_id))
         byte_2 = bytes(c_uint8(angle))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
+        return str(reply, 'ascii')
 
     def dcMove(self, motor_id, direction, speed):
         global COMMAND_HEADER
@@ -158,35 +143,25 @@ class PySense(object):
         byte_2 = bytes(c_uint8(speed*32 + motor_id))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
-        
-
+        return str(reply, 'ascii')
+    
     def dcOff(self, motor_id):
         global COMMAND_HEADER
         byte_1 = '\x80'
         byte_2 = bytes(c_uint8(motor_id))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply = binascii.hexlify(self.ser.read(size=3))
-        if os.name == 'nt':
-            return str(reply, 'ascii')
-        elif os.name == 'posix':
-            return str(reply)
-
+        return str(reply, 'ascii')
+    
     def readSensor(self, sensor_id):
         global COMMAND_HEADER
         byte_1 = bytes(c_uint8(32 + sensor_id))
         byte_2 = b'\x00'
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply=binascii.hexlify(self.ser.read(size=4))
-        if os.name == 'nt':
-            string_reply = str(reply, 'ascii')
-        elif os.name == 'posix':
-            string_reply = str(reply)
+        string_reply = str(reply, 'ascii')
         return int(string_reply[5:], 16)
-
+    
     def burstModeSet(self, sensor_id_array):
         global COMMAND_HEADER
         sensor_id_total_0_to_7 = 0
@@ -194,11 +169,10 @@ class PySense(object):
         for i in sensor_id_array:
             if i <= 7:
                 sensor_id_total_0_to_7 += 2**i
-
+            
             if i >7:
                 sensor_id_total_8_to_15 += 2**i
-
-
+        
         byte_1 = b'\xA0'
         byte_2 = bytes(c_uint8(sensor_id_total_0_to_7))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
@@ -209,13 +183,8 @@ class PySense(object):
         reply_2 = binascii.hexlify(self.ser.read(size=3))
         self.burst_length = len(sensor_id_array)
         if reply_1 == reply_2:
-            if os.name == 'nt':
-                return str(reply_1, 'ascii')
-            elif os.name == 'posix':
-                return str(reply_1)
-        
+            return str(reply_1, 'ascii')
     
-
     def burstModeOffAll(self):
         global COMMAND_HEADER
         byte_1 = b'\xA0'
@@ -226,21 +195,17 @@ class PySense(object):
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
         reply_2 = binascii.hexlify(self.ser.read(size=3))
         if reply_1 == reply_2:
-            if os.name == 'nt':
-                return str(reply_1, 'ascii')
-            elif os.name == 'posix':
-                return str(reply_1)
+            return str(reply_1, 'ascii')
             
         
 
     def readBursts(self):
         burst_response = binascii.hexlify(self.ser.read(size=3*self.burst_length))
-        if os.name == 'nt':
-            return str(burst_repsonse, 'ascii')
-        elif os.name == 'posix':
-            return str(burst_response)
+        return str(burst_repsonse, 'ascii')
+
 
     def __init__(self):
+        global PORTLIST
         if os.name == 'nt':
             for com in self.scanWindows():
                 self.ser = serial.Serial(int(com[0]), 115200, timeout=1)
@@ -263,16 +228,15 @@ class PySense(object):
                     time.sleep(2)
                     if self.pingSenseBoard() == '55ffaa0460':
                         print ("Opening Serial port...")
-                        time.sleep(2)
-                        print ("Connected to sense at port: " + self.ser.name)
+                        print ("Connected to sense at port:" + self.ser.name)
+                        PORTLIST.remove(com)
                         break
                     else:
+                        print ("This isn't a SenseBoard, closing port")
                         self.ser.close()
 
                 except serial.SerialException:
                     pass
                 
-
-
 
 
