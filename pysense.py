@@ -1,7 +1,9 @@
 import serial, time, binascii, os, glob
 from ctypes import c_uint8
 
+
 #sensor IDs used to select sensor to read
+
 SLIDER = 0
 INFRARED = 1
 MICROPHONE = 2
@@ -74,7 +76,6 @@ class PySense(object):
         led_id = 0 #resets id to 0
         return str(reply, 'ascii') #return reply as ascii string
 
-        
     def ledOff(self, led_id): #turns OFF an individual LED - takes LED number as an int
         global COMMAND_HEADER
         byte_1 = b'\xC0'
@@ -169,10 +170,9 @@ class PySense(object):
         for i in sensor_id_array:
             if i <= 7:
                 sensor_id_total_0_to_7 += 2**i
-            
             if i >7:
                 sensor_id_total_8_to_15 += 2**i
-        
+			
         byte_1 = b'\xA0'
         byte_2 = bytes(c_uint8(sensor_id_total_0_to_7))
         self.ser.write(COMMAND_HEADER + byte_1 + byte_2)
@@ -234,5 +234,3 @@ class PySense(object):
                 except serial.SerialException:
                     pass
                 
-
-
